@@ -1,1 +1,7 @@
-# Hier startet das Base-File, welches Stages und Container Runtime zur Verfügung stellt 
+stages:
+  - build-tools-container
+  # - build-consumer-container
+  # - deploy-dev
+  # - deploy-staging
+  # - deploy-prod
+
