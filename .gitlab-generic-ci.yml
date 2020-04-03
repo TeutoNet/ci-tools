@@ -16,6 +16,7 @@ stages:
   DOCKER_CONTEXT=$2
 
   function build_container() {
+    echo "Container-Runtime is: $CONTAINER_RUNTIME"
     if [[ $# -ne 2 ]] ; then
       echo "You must provide exactly two arguments"
     elif [[ "$CONTAINER_RUNTIME" == "docker" ]] ; then
