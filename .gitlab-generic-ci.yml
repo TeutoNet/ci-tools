@@ -16,7 +16,7 @@ stages:
     if [[ $# -ne 2 ]] ; then
       show_usage
     elif [[ "$1" == "docker" ]] ; then
-      echo "docker build $2"
+      docker build $2
     elif [[ "$1" == "podman" ]] ; then
       echo "Todo"
     else
