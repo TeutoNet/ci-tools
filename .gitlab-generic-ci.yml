@@ -5,7 +5,7 @@
 stages:
 - build
 #- test
-#- deploy
+- deploy
 
 #variables defined by Consumer Project:
 #  CI_BASE_PROJECT
@@ -35,7 +35,7 @@ stages:
 
   function docker_build() {
     docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" $2
+    docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $DOCKER_CONTEXT
     docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
   }
 
@@ -43,15 +43,19 @@ stages:
     echo "Nothing happening yet"
   }
 
-.deploy_kustomize_function: &deploy_kustomize_function |
+.deploy_function: &deploy_function |
   
   KUSTOMIZE_DIR=$1
 
-  function deploy_kustomize() {
-    kustomize build $KUSTOMIZE_DIR | kubectl apply -f -
+  function deploy() {
+    cd $KUSTOMIZE_DIR
+    kustomize edit set namespace
+    kustomize edit set image image-name=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    kustomize build . | kubectl apply -f -
+    cd -
   }
 
-build_container:
+.build_container:
   image: $CI_REGISTRY/$CI_BASE_PROJECT:$CI_TOOLS_TAG
   stage: build
   before_script:
@@ -59,3 +63,14 @@ build_container:
   script:
   - build_container podman .
 
+.deploy_container:
+  image: $CI_REGISTRY/$CI_BASE_PROJECT:$CI_TOOLS_TAG
+  stage: deploy
+  before_script:
+  - *deploy_function
+  script:
+  - deploy $KUSTOMIZE_DIR
+  only:
+  - dev
+  - staging
+  - prod
