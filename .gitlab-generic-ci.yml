@@ -60,7 +60,7 @@ stages:
   before_script:
   - *build_container_function
   script:
-  - build_container podman .
+  - build_container docker .
 
 .deploy_container:
   image: $CI_REGISTRY/$CI_BASE_PROJECT:$CI_TOOLS_TAG
