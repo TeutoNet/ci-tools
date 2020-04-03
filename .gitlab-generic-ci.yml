@@ -40,15 +40,17 @@ stages:
   }
 
 .deploy_function: &deploy_function |
-  
-  KUSTOMIZE_DIR=$1
 
   function deploy() {
+
+    KUSTOMIZE_DIR=$1
+
     cd $KUSTOMIZE_DIR
-    kustomize edit set namespace
+    kustomize edit set namespace $CI_COMMIT_BRANCH
     kustomize edit set image image-name=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
     kustomize build . | kubectl apply -f -
     cd -
+      
   }
 
 .build_container:
