@@ -11,12 +11,12 @@ stages:
 #  CI_TOOLS_TAG
 
 .build_container_function: &build_container_function |
-  
-  CONTAINER_RUNTIME=$1
-  DOCKER_CONTEXT=$2
 
   function build_container() {
-    echo "Container-Runtime is: $1"
+    
+    CONTAINER_RUNTIME=$1
+    DOCKER_CONTEXT=$2
+    
     if [[ $# -ne 2 ]] ; then
       echo "You must provide exactly two arguments"
     elif [[ "$CONTAINER_RUNTIME" == "docker" ]] ; then
@@ -26,6 +26,7 @@ stages:
     else
       echo "Choose between docker and podman"
     fi
+
   }
 
   function docker_build() {
