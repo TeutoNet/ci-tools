@@ -1,7 +1,27 @@
-stages:
-  - build-tools-container
-  # - build-consumer-container
-  # - deploy-dev
-  # - deploy-staging
-  # - deploy-prod
+.build_container_function: &build_container_function |
+  export CI_APPLICATION_REPOSITORY=$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
+  
+  function show_usage() {
+    echo "Todo"
+    exit 1
+  }
 
+  function build_container() {
+    if [[ $# -ne 2 ]]; then
+      show_usage
+    elif [[ "$1" == "docker"]]; then
+      docker build $2
+    elif [[ "$1" == "podman" ]]; then
+      echo "Todo"
+    else
+      show_usage
+    fi
+
+  }
+
+build:
+  - *build_container_function
+  - build_container_function docker .
+
+
+#Note: You can’t use YAML anchors across multiple files when leveraging the include feature. Anchors are only valid within the file they were defined in.
