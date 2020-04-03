@@ -4,7 +4,6 @@
 
 stages:
 - build
-#- test
 - deploy
 
 #variables defined by Consumer Project:
@@ -72,5 +71,5 @@ stages:
   - deploy $KUSTOMIZE_DIR
   only:
   - dev
-  - staging
+  - master
   - prod
