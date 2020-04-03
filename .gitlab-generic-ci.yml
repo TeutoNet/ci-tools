@@ -15,20 +15,15 @@ stages:
   CONTAINER_RUNTIME=$1
   DOCKER_CONTEXT=$2
 
-  function show_usage() {
-    echo "Todo"
-    exit 1
-  }
-
   function build_container() {
     if [[ $# -ne 2 ]] ; then
-      show_usage
+      echo "You must provide exactly two arguments"
     elif [[ "$CONTAINER_RUNTIME" == "docker" ]] ; then
       docker_build $CONTAINER_RUNTIME $DOCKER_CONTEXT
     elif [[ "$CONTAINER_RUNTIME" == "podman" ]] ; then
       podman_build $CONTAINER_RUNTIME $DOCKER_CONTEXT
     else
-      show_usage
+      echo "Choose between docker and podman"
     fi
   }
 
