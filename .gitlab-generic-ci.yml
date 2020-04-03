@@ -20,7 +20,7 @@ stages:
     elif [[ "$1" == "docker" ]] ; then
       docker_build $1 $2
     elif [[ "$1" == "podman" ]] ; then
-      echo "Todo"
+      podman_build $1 $2
     else
       show_usage
     fi
