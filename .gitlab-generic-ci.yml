@@ -1,3 +1,8 @@
+stages:
+- build
+#- test
+#- deploy
+
 .build_container_function: &build_container_function |
   export CI_APPLICATION_REPOSITORY=$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
   
@@ -20,7 +25,9 @@
   }
 
 build:
+  before_script:
   - *build_container_function
+  script:
   - build_container_function docker .
 
 
