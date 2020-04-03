@@ -3,6 +3,10 @@ stages:
 #- test
 #- deploy
 
+#variables defined by Consumer Project:
+#  CI_BASE_PROJECT
+#  CI_TOOLS_TAG
+
 .build_container_function: &build_container_function |
   export CI_APPLICATION_REPOSITORY=$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
   
@@ -36,7 +40,7 @@ stages:
   build_container docker .
 
 build_container:
-  image: registry-gitlab.teuto.net/kubernetes/generic-ci:latest
+  image: $CI_REGISTRY/CI_BASE_PROJECT:$CI_TOOLS_TAG
   stage: build
   before_script:
   - *build_container_function
