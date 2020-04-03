@@ -13,16 +13,15 @@ stages:
 
   function build_container() {
     set -x
-    if [[ $# -ne 2 ]]; then
+    if [[ $# -ne 2 ]] ; then
       show_usage
-    elif [[ "$1" == "docker"]]; then
-      docker build $2
-    elif [[ "$1" == "podman" ]]; then
+    elif [[ "$1" == "docker" ]] ; then
+      echo "docker build $2"
+    elif [[ "$1" == "podman" ]] ; then
       echo "Todo"
     else
       show_usage
     fi
-
   }
 
 build_container:
