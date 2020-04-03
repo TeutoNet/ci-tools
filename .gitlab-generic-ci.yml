@@ -24,14 +24,14 @@ stages:
     fi
   }
 
-  export -f build_container
+  build_container docker .
 
 build_container:
   stage: build
   before_script:
   - *build_container_function
-  script:
-  - build_container_function docker .
+  #script:
+  #- build_container_function docker .
 
 
 #Note: You can’t use YAML anchors across multiple files when leveraging the include feature. Anchors are only valid within the file they were defined in.
