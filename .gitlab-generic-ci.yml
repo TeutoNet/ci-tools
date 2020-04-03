@@ -12,7 +12,6 @@ stages:
   }
 
   function build_container() {
-    set -x
     if [[ $# -ne 2 ]] ; then
       show_usage
     elif [[ "$1" == "docker" ]] ; then
