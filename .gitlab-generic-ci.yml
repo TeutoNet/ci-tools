@@ -25,6 +25,7 @@ stages:
   }
 
 build:
+  stage: build
   before_script:
   - *build_container_function
   script:
