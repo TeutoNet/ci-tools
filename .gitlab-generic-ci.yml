@@ -1,3 +1,7 @@
+#Note: You can’t use YAML anchors across multiple files when leveraging the include feature. Anchors are only valid within the file they were defined in.
+
+# $KUBE_INGRESS_BASE_DOMAIN delivers Basedomain configured for Kubernetes Cluster-Integration
+
 stages:
 - build
 #- test
@@ -9,6 +13,9 @@ stages:
 
 .build_container_function: &build_container_function |
   
+  CONTAINER_RUNTIME=$1
+  DOCKER_CONTEXT=$2
+
   function show_usage() {
     echo "Todo"
     exit 1
@@ -17,10 +24,10 @@ stages:
   function build_container() {
     if [[ $# -ne 2 ]] ; then
       show_usage
-    elif [[ "$1" == "docker" ]] ; then
-      docker_build $1 $2
-    elif [[ "$1" == "podman" ]] ; then
-      podman_build $1 $2
+    elif [[ "$CONTAINER_RUNTIME" == "docker" ]] ; then
+      docker_build $CONTAINER_RUNTIME $DOCKER_CONTEXT
+    elif [[ "$CONTAINER_RUNTIME" == "podman" ]] ; then
+      podman_build $CONTAINER_RUNTIME $DOCKER_CONTEXT
     else
       show_usage
     fi
@@ -36,6 +43,14 @@ stages:
     echo "Nothing happening yet"
   }
 
+.deploy_kustomize_function: &deploy_kustomize_function |
+  
+  KUSTOMIZE_DIR=$1
+
+  function deploy_kustomize() {
+    kustomize build $KUSTOMIZE_DIR | kubectl apply -f -
+  }
+
 build_container:
   image: $CI_REGISTRY/$CI_BASE_PROJECT:$CI_TOOLS_TAG
   stage: build
@@ -44,5 +59,3 @@ build_container:
   script:
   - build_container podman .
 
-
-#Note: You can’t use YAML anchors across multiple files when leveraging the include feature. Anchors are only valid within the file they were defined in.
