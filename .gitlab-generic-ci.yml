@@ -16,14 +16,22 @@ stages:
     if [[ $# -ne 2 ]] ; then
       show_usage
     elif [[ "$1" == "docker" ]] ; then
-      docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-      docker build -t "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA" $2
-      docker push "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
+      docker_build $1 $2
     elif [[ "$1" == "podman" ]] ; then
       echo "Todo"
     else
       show_usage
     fi
+  }
+
+  function docker_build() {
+    docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" $2
+    docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+  }
+
+  function podman_build() {
+    echo "Nothing happening yet"
   }
 
   build_container docker .
