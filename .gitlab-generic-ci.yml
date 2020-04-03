@@ -24,6 +24,8 @@ stages:
     fi
   }
 
+  export -f build_container
+
 build_container:
   stage: build
   before_script:
