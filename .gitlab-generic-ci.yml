@@ -36,15 +36,13 @@ stages:
     echo "Nothing happening yet"
   }
 
-  #build_container docker .
-
 build_container:
   image: $CI_REGISTRY/$CI_BASE_PROJECT:$CI_TOOLS_TAG
   stage: build
   before_script:
   - *build_container_function
   script:
-  - build_container docker .
+  - build_container podman .
 
 
 #Note: You can’t use YAML anchors across multiple files when leveraging the include feature. Anchors are only valid within the file they were defined in.
