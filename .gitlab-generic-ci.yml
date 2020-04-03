@@ -50,6 +50,7 @@ stages:
     cd $KUSTOMIZE_DIR
     kustomize edit set namespace $CI_COMMIT_REF_NAME
     kustomize edit set image image-name=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    kubectl config current-context
     kustomize build . | kubectl apply -f -
     cd -
 
