@@ -40,7 +40,7 @@ stages:
   build_container docker .
 
 build_container:
-  image: $CI_REGISTRY/CI_BASE_PROJECT:$CI_TOOLS_TAG
+  image: $CI_REGISTRY/$CI_BASE_PROJECT:$CI_TOOLS_TAG
   stage: build
   before_script:
   - *build_container_function
