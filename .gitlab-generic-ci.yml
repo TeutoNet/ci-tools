@@ -1,14 +1,14 @@
-#Note: You can’t use YAML anchors across multiple files when leveraging the include feature. Anchors are only valid within the file they were defined in.
-
-# $KUBE_INGRESS_BASE_DOMAIN delivers Basedomain configured for Kubernetes Cluster-Integration
+#  Note: You can’t use YAML anchors across multiple files when leveraging 
+#  the include feature. Anchors are only valid within the file they were defined in.
+#  $KUBE_INGRESS_BASE_DOMAIN delivers Basedomain configured for Kubernetes
+#  Cluster-Integration
+#  variables defined by Consumer Project:
+#    CI_BASE_PROJECT
+#    CI_TOOLS_TAG
 
 stages:
 - build
 - deploy
-
-#variables defined by Consumer Project:
-#  CI_BASE_PROJECT
-#  CI_TOOLS_TAG
 
 .build_container_function: &build_container_function |
 
@@ -44,12 +44,13 @@ stages:
   function deploy() {
 
     KUSTOMIZE_DIR=$1
+    DEPLOY_ENVIRONMENT=$2
+    KUBE_INGRESS_BASE_DOMAIN="${DEPLOY_ENVIRONMENT}.${KUBE_INGRESS_BASE_DOMAIN}"
 
     cd $KUSTOMIZE_DIR
     kustomize edit set namespace $KUBE_NAMESPACE
     kustomize edit set image image-name=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-    env
-    kustomize build . | kubectl apply -f -
+    kustomize build . | envsubst '${KUBE_INGRESS_BASE_DOMAIN}' | kubectl apply -f -
     cd -
 
   }
@@ -68,4 +69,4 @@ stages:
   before_script:
   - *deploy_function
   script:
-  - deploy $KUSTOMIZE_DIR
+  - deploy $KUSTOMIZE_DIR dev
