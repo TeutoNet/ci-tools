@@ -44,8 +44,6 @@ stages:
   function deploy() {
 
     KUSTOMIZE_DIR=$1
-    
-    set -x
 
     cd $KUSTOMIZE_DIR
     kustomize edit set namespace $CI_COMMIT_REF_NAME
@@ -71,7 +69,3 @@ stages:
   - *deploy_function
   script:
   - deploy $KUSTOMIZE_DIR
-  only:
-  - dev
-  - master
-  - prod
