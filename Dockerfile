@@ -1,7 +1,7 @@
 FROM alpine:3.10
 
 LABEL maintainer="ftb@teuto.net"
-LABEL tools="kubectl,kustomize,envsubst,docker,podman"
+LABEL tools="kubectl,kustomize,envsubst,docker"
 
 ARG KUBECTL_BIN_VERSION=v1.16.0
 ARG KUSTOMIZE_BIN_VERSION=v3.5.4
