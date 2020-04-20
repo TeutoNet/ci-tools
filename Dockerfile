@@ -18,8 +18,8 @@ RUN apk  add  --no-cache \
 
 # Install kubectl
 RUN cd /usr/local/bin && \
-    && curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_BIN_VERSION}/bin/linux/amd64/kubectl \
-    && chmod +x kubectl
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_BIN_VERSION}/bin/linux/amd64/kubectl && \
+    chmod +x kubectl
 
 RUN cd /usr/local/bin && \
   curl -LO https://github.com/instrumenta/kubeval/releases/download/0.15.0/kubeval-linux-amd64.tar.gz  && \
