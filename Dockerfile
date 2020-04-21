@@ -1,12 +1,31 @@
-FROM alpine:3.10
+FROM golang:alpine AS builder
+
+RUN apk update && apk add --no-cache git build-base gcc 
+
+#run export GOPATH=/go && \
+#    echo $GOPATH && \
+
+
+
+RUN cd / \
+ && apk --no-cache add bash \ 
+ && git clone  https://github.com/viaduct-ai/kustomize-sops.git \
+ && cd kustomize-sops/ \
+ && make sops \
+ && make kustomize \
+ && make build-plugin \
+ && ls -al /kustomize-sops/ksops.so 
+
+
+# final stage
+FROM alpine as final
 
 LABEL maintainer="ftb@teuto.net"
-LABEL tools="kubectl,kustomize,envsubst,docker,podman"
+LABEL tools="kubectl,kustomize,envsubst,docker"
 
-ARG KUBECTL_BIN_VERSION=v1.16.0
-ARG KUSTOMIZE_BIN_VERSION=v3.5.4
 
-RUN apk  add  --no-cache \
+RUN apk update && \
+  apk  add  --no-cache \
   bash \
   ca-certificates \
   curl \
@@ -14,24 +33,38 @@ RUN apk  add  --no-cache \
   gettext \
   git \
   jq \
+  gnupg \
   multipath-tools
 
-# Install kubectl
-RUN cd /usr/local/bin && \
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_BIN_VERSION}/bin/linux/amd64/kubectl && \
-    chmod +x kubectl
+ARG USER_ID=1000
+ARG GROUP_ID=1000
 
-RUN cd /usr/local/bin && \
-  curl -LO https://github.com/instrumenta/kubeval/releases/download/0.15.0/kubeval-linux-amd64.tar.gz  && \
-  tar -zxf kubeval-linux-amd64.tar.gz && \
-  rm  kubeval-linux-amd64.tar.gz && \
-  chmod +x kubeval
+RUN addgroup -g ${GROUP_ID} user \
+   && adduser -h /home/user -s /bin/bash -G user -D -u ${USER_ID} user 
 
-# Install kustomize
-RUN cd /usr/local/bin && \
-  curl -LO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.5.4/kustomize_${KUSTOMIZE_BIN_VERSION}_linux_amd64.tar.gz && \
-  tar -zxf kustomize_${KUSTOMIZE_BIN_VERSION}_linux_amd64.tar.gz && \
-  rm kustomize_${KUSTOMIZE_BIN_VERSION}_linux_amd64.tar.gz && \
-  chmod +x kustomize
+WORKDIR /home/user
 
-CMD ["bash"]
+COPY --from=builder /go/bin/kustomize /usr/local/bin/
+
+COPY --from=builder /go/bin/sops  /usr/local/bin
+
+ARG XDG_CONFIG_HOME="/home/user/.config/kustomize/plugin/viaduct.ai/v1/ksops/"
+RUN mkdir -p ${XDG_CONFIG_HOME}
+# "Copying executable plugin to the kustomize plugin path..."
+COPY --from=builder /kustomize-sops/ksops.so ${XDG_CONFIG_HOME}
+
+RUN chown -R user:user /home/user
+
+
+RUN cd /usr/local/bin \
+  && curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl \
+  && chmod +x kubectl \
+  && curl -LO https://github.com/instrumenta/kubeval/releases/download/0.15.0/kubeval-linux-amd64.tar.gz \
+  && tar -zxf kubeval-linux-amd64.tar.gz \
+  && rm  kubeval-linux-amd64.tar.gz \
+  && chmod +x kubeval
+
+
+
+ENTRYPOINT /bin/bash
+
