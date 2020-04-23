@@ -5,3 +5,7 @@ This repository contains a Multi-Stage Dockerfile for buliding a container that 
 - docker
 - kustomize
 - kubectl
+
+## .gitlab-ci.yml
+
+GitLab Template for buliding this Container
