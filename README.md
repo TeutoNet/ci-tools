@@ -5,6 +5,9 @@ This repository contains a Multi-Stage Dockerfile for buliding a container that 
 - docker
 - kustomize 
 - kubectl
+- sop
+## sops plugin version
+https://github.com/viaduct-ai/kustomize-sops
 
 ## kustomize ist in einer aktuellen 3er Version installiert
 
