@@ -66,5 +66,5 @@ RUN cd /usr/local/bin \
 
 
 
-ENTRYPOINT /bin/bash
+CMD /bin/bash
 
