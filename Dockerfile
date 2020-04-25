@@ -55,7 +55,7 @@ COPY --from=builder /kustomize-sops/ksops.so ${XDG_CONFIG_HOME}
 
 # schema dateien für kubecval cachen
 # siehe https://itnext.io/increasing-kubeval-linting-speeds-9607d1141c6a
-ENV KUBEVAL_SCHEMA_LOCATION=file:///usr/local/kubeval/schemas # wird zur laufzeit von kubeval benutzt
+ENV KUBEVAL_SCHEMA_LOCATION="file:///usr/local/kubeval/schemas" # wird zur laufzeit von kubeval benutzt
 RUN mkdir -p /usr/local/kubeval/schemas  \
   && curl https://codeload.github.com/instrumenta/kubernetes-json-schema/tar.gz/master | \
        tar -C /usr/local/kubeval/schemas --strip-components=1 -xzf - kubernetes-json-schema-master/${KUBEVER}-standalone-strict
