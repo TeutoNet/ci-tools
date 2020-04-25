@@ -2,10 +2,6 @@ FROM golang:alpine AS builder
 
 RUN apk update && apk add --no-cache git build-base gcc 
 
-#run export GOPATH=/go && \
-#    echo $GOPATH && \
-
-
 
 RUN cd / \
  && apk --no-cache add bash \ 
@@ -44,20 +40,26 @@ RUN addgroup -g ${GROUP_ID} user \
 
 WORKDIR /home/user
 
-COPY --from=builder /go/bin/kustomize /usr/local/bin/
-
-COPY --from=builder /go/bin/sops  /usr/local/bin
+COPY --from=builder /go/bin/kustomize /go/bin/sops /usr/local/bin/
 
 ARG XDG_CONFIG_HOME="/home/user/.config/kustomize/plugin/viaduct.ai/v1/ksops/"
-RUN mkdir -p ${XDG_CONFIG_HOME}
+
+
+RUN chown -R user:user /home/user \
+  && mkdir -p ${XDG_CONFIG_HOME} \
+  &&  sed -e 's;/bin/ash$;/bin/bash;g' -i /etc/passwd # shell für den benutzer root auf bash umstellenm
+
 # "Copying executable plugin to the kustomize plugin path..."
 COPY --from=builder /kustomize-sops/ksops.so ${XDG_CONFIG_HOME}
 
-RUN chown -R user:user /home/user
-
+# schema dateien für kubecval cachen
+# siehe https://itnext.io/increasing-kubeval-linting-speeds-9607d1141c6a
+RUN mkdir -p /usr/local/kubeval/schemas  \
+  && curl https://codeload.github.com/instrumenta/kubernetes-json-schema/tar.gz/master | \
+       tar -C /usr/local/kubeval/schemas --strip-components=1 -xzf - kubernetes-json-schema-master/v1.18.1-standalone-strict
 
 RUN cd /usr/local/bin \
-  && curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl \
+  && curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.1/bin/linux/amd64/kubectl \
   && chmod +x kubectl \
   && curl -LO https://github.com/instrumenta/kubeval/releases/download/0.15.0/kubeval-linux-amd64.tar.gz \
   && tar -zxf kubeval-linux-amd64.tar.gz \
@@ -71,17 +73,6 @@ RUN cd /usr/local/bin \
   && curl -sL https://github.com/stedolan/jq/releases/latest/download/jq-linux64 -o /usr/local/bin/jq \ 
   && chmod +x /usr/local/bin/jq
 
-RUN printf "\nfetch kubeval kubernetes json schemas for v1.$(kubectl version --client=true --short=true | awk '{print $3}' | awk -F'.' '{print $2}').0\n" \
-  && mkdir -p /usr/local/kubeval/schemas  \
-  && curl https://codeload.github.com/instrumenta/kubernetes-json-schema/tar.gz/master | \
-       tar -C /usr/local/kubeval/schemas --strip-components=1 -xzf - \
-  && kubernetes-json-schema-master/v1.$(kubectl version --client=true --short=true | awk '{print $3}' | awk -F'.' '{print $2}').0-standalone-strict
-
-  
-
-#loginshell für alle benutzer auf bash setzen, damit es in der CI auf jeden Fall bash benutzt wird
-RUN sed -e 's;/bin/ash$;/bin/bash;g' -i /etc/passwd
-
-
+#ENTRYPOINT entfernt un ddurch CMD ersetzt, damit man mit docker run das binary angeben kann und nicht automatisch der entrypoint gestartet wird
 CMD /bin/bash
 
