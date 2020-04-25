@@ -62,16 +62,16 @@ RUN cd /usr/local/bin \
   && curl -LO https://github.com/instrumenta/kubeval/releases/download/0.15.0/kubeval-linux-amd64.tar.gz \
   && tar -zxf kubeval-linux-amd64.tar.gz \
   && rm  kubeval-linux-amd64.tar.gz \
-  && chmod +x kubeval
-  && curl -sSL https://get.helm.sh/helm-v3.2.0-linux-amd64.tar.gz | \
-     tar xz && mv linux-amd64/helm /usr/local/bin/helmv3 
-  && rm -rf linux-amd64
+  && chmod +x kubeval \
+  && curl -sSL https://get.helm.sh/helm-v3.2.0-linux-amd64.tar.gz | tar xz \
+  && mv linux-amd64/helm /usr/local/bin/helmv3 \
+  && rm -rf linux-amd64 \
   && curl -sL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq \
-  && chmod +x /usr/local/bin/yq
-  && curl -sL https://github.com/stedolan/jq/releases/latest/download/jq-linux64 -o /usr/local/bin/jq 
+  && chmod +x /usr/local/bin/yq \
+  && curl -sL https://github.com/stedolan/jq/releases/latest/download/jq-linux64 -o /usr/local/bin/jq \ 
   && chmod +x /usr/local/bin/jq
 
-RUN printf "\nfetch kubeval kubernetes json schemas for v1.$(kubectl version --client=true --short=true | awk '{print $3}' | awk -F'.' '{print $2}').0\n"
+RUN printf "\nfetch kubeval kubernetes json schemas for v1.$(kubectl version --client=true --short=true | awk '{print $3}' | awk -F'.' '{print $2}').0\n" \
   && mkdir -p /usr/local/kubeval/schemas  \
   && curl https://codeload.github.com/instrumenta/kubernetes-json-schema/tar.gz/master | \
        tar -C /usr/local/kubeval/schemas --strip-components=1 -xzf - \
