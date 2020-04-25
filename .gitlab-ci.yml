@@ -2,6 +2,8 @@
 docker-build-master:
   # Official docker image.
   image: docker:latest
+  variables:
+    DOCKER_DRIVER: overlay
   stage: build
   services:
     - docker:dind
@@ -16,6 +18,9 @@ docker-build-master:
 docker-build:
   # Official docker image.
   image: docker:latest
+  variables:
+    DOCKER_DRIVER: overlay
+
   stage: build
   services:
     - docker:dind
