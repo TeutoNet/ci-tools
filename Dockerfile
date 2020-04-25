@@ -19,6 +19,7 @@ FROM alpine as final
 LABEL maintainer="ftb@teuto.net"
 LABEL tools="kubectl,kustomize,ksops,envsubst,docker,helmv3,yq,jq,kubeval"
 
+ENV KUBEVER="v1.18.1"
 
 RUN apk update && \
   apk  add  --no-cache \
@@ -54,12 +55,13 @@ COPY --from=builder /kustomize-sops/ksops.so ${XDG_CONFIG_HOME}
 
 # schema dateien für kubecval cachen
 # siehe https://itnext.io/increasing-kubeval-linting-speeds-9607d1141c6a
+ENV KUBEVAL_SCHEMA_LOCATION=file:///usr/local/kubeval/schemas # wird zur laufzeit von kubeval benutzt
 RUN mkdir -p /usr/local/kubeval/schemas  \
   && curl https://codeload.github.com/instrumenta/kubernetes-json-schema/tar.gz/master | \
-       tar -C /usr/local/kubeval/schemas --strip-components=1 -xzf - kubernetes-json-schema-master/v1.18.1-standalone-strict
+       tar -C /usr/local/kubeval/schemas --strip-components=1 -xzf - kubernetes-json-schema-master/${KUBEVER}-standalone-strict
 
 RUN cd /usr/local/bin \
-  && curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.1/bin/linux/amd64/kubectl \
+  && curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBEVER}/bin/linux/amd64/kubectl \
   && chmod +x kubectl \
   && curl -LO https://github.com/instrumenta/kubeval/releases/download/0.15.0/kubeval-linux-amd64.tar.gz \
   && tar -zxf kubeval-linux-amd64.tar.gz \
