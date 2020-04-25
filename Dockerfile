@@ -64,6 +64,8 @@ RUN cd /usr/local/bin \
   && rm  kubeval-linux-amd64.tar.gz \
   && chmod +x kubeval
 
+#loginshell für alle benutzer auf bash setzen, damit es in der CI auf jeden Fall bash benutzt wird
+RUN sudo sed -e 's;/bin/ash$;/bin/bash;g' -i /etc/passwd
 
 
 CMD /bin/bash
