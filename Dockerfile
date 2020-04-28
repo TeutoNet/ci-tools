@@ -79,6 +79,7 @@ RUN cd /usr/local/bin \
 # der cp befehl in alpine kennt den parameter -n clobber nicht  
 RUN apk add --no-cache  coreutils
 
+
 #ENTRYPOINT entfernt un ddurch CMD ersetzt, damit man mit docker run das binary angeben kann und nicht automatisch der entrypoint gestartet wird
 CMD /bin/bash
 
