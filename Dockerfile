@@ -79,6 +79,8 @@ RUN cd /usr/local/bin \
 # der cp befehl in alpine kennt den parameter -n clobber nicht  
 RUN apk add --no-cache  coreutils
 
+RUN curl -fSL -o "/usr/local/bin/tk" "https://github.com/grafana/tanka/releases/download/v0.9.2/tk-linux-amd64" \
+  && chmod a+x "/usr/local/bin/tk"
 
 #ENTRYPOINT entfernt un ddurch CMD ersetzt, damit man mit docker run das binary angeben kann und nicht automatisch der entrypoint gestartet wird
 CMD /bin/bash
