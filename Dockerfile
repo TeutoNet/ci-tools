@@ -87,7 +87,7 @@ ENV HELMFILE_VERSION v0.114.0
 RUN wget -q https://github.com/roboll/helmfile/releases/download/${HELMFILE_VERSION}/helmfile_linux_amd64 -O /usr/bin/helmfile; \
     chmod +x /usr/bin/helmfile
 
-RUN ln -s /usr/local/bin/helm /usr/local/bin/helmv3
+RUN ln -sf  /usr/local/bin/helmv3 /usr/local/bin/helm
 # HELM PLUGINS werden von helmfile bnötigt
 RUN helm plugin install https://github.com/aslafy-z/helm-git
 RUN helm plugin install https://github.com/databus23/helm-diff
