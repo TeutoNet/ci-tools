@@ -81,6 +81,17 @@ RUN apk add --no-cache  coreutils
 
 RUN curl -fSL -o "/usr/local/bin/tk" "https://github.com/grafana/tanka/releases/download/v0.9.2/tk-linux-amd64" \
   && chmod a+x "/usr/local/bin/tk"
+  
+# HELMFILE
+ENV HELMFILE_VERSION v0.114.0
+RUN wget -q https://github.com/roboll/helmfile/releases/download/${HELMFILE_VERSION}/helmfile_linux_amd64 -O /usr/bin/helmfile; \
+    chmod +x /usr/bin/helmfile
+
+# HELM PLUGINS werden von helmfile bnötigt
+RUN helm plugin install https://github.com/aslafy-z/helm-git
+RUN helm plugin install https://github.com/databus23/helm-diff
+RUN helm plugin install https://github.com/futuresimple/helm-secrets
+
 
 #ENTRYPOINT entfernt un ddurch CMD ersetzt, damit man mit docker run das binary angeben kann und nicht automatisch der entrypoint gestartet wird
 CMD /bin/bash
