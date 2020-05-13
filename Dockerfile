@@ -92,7 +92,7 @@ RUN ln -sf  /usr/local/bin/helmv3 /usr/local/bin/helm
 RUN helm plugin install https://github.com/aslafy-z/helm-git
 RUN helm plugin install https://github.com/databus23/helm-diff
 RUN helm plugin install https://github.com/futuresimple/helm-secrets
-
+RUN helm plugin install https://github.com/chartmuseum/helm-push.git
 
 #ENTRYPOINT entfernt un ddurch CMD ersetzt, damit man mit docker run das binary angeben kann und nicht automatisch der entrypoint gestartet wird
 CMD /bin/bash
