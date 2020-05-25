@@ -11,10 +11,10 @@ docker-build-master:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
     - docker logout
     - echo $DOCKER_HUB_PASSWD_B64 | base64 -d | docker login --password-stdin -u "$DOCKER_HUB_USER" $DOCKER_HUB_URL
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
   after_script:
     - docker logout
   only:
