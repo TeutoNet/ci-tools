@@ -16,6 +16,8 @@ docker-build-master:
     - echo $DOCKER_HUB_PASSWD_B64 | base64 -d | docker login --password-stdin -u "$DOCKER_HUB_USER" $DOCKER_HUB_URL
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA teutonet/ci-tools:$CI_COMMIT_SHORT_SHA
     - docker push "teutonet/ci-tools:$CI_COMMIT_SHORT_SHA"
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA teutonet/ci-tools:latest
+    - docker push "teutonet/ci-tools:latest"
   after_script:
     - docker logout
   only:
