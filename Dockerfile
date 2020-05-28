@@ -97,6 +97,11 @@ RUN helm plugin install https://github.com/chartmuseum/helm-push.git
 RUN cd /usr/local/bin \
   &&   curl -L https://github.com/controlplaneio/kubesec/releases/download/v2.4.0/kubesec_linux_amd64.tar.gz | tar -xz kubesec
 
+COPY \
+   prepare_gpg_env.sh \
+   prepare_ssh_env.sh \
+   /usr/local/bin/
+
 #ENTRYPOINT entfernt un ddurch CMD ersetzt, damit man mit docker run das binary angeben kann und nicht automatisch der entrypoint gestartet wird
 CMD /bin/bash
 
