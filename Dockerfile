@@ -51,8 +51,6 @@ RUN chown -R user:user /home/user \
   && mkdir -p ${XDG_CONFIG_HOME} \
   &&  sed -e 's;/bin/ash$;/bin/bash;g' -i /etc/passwd # shell für den benutzer root auf bash umstellenm
 
-RUN groupadd docker && usermod -aG docker user # User "user" zur Gruppe "docker" hinzufügen, damit auf den docker daemon zugegriffen werden kann
-
 # "Copying executable plugin to the kustomize plugin path..."
 COPY --from=builder /kustomize-sops/ksops.so ${XDG_CONFIG_HOME}
 
