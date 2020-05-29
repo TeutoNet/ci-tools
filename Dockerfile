@@ -101,6 +101,8 @@ COPY \
    prepare_gpg_env.sh \
    prepare_ssh_env.sh \
    /usr/local/bin/
+   
+USER user
 
 #ENTRYPOINT entfernt un ddurch CMD ersetzt, damit man mit docker run das binary angeben kann und nicht automatisch der entrypoint gestartet wird
 CMD /bin/bash
