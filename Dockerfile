@@ -37,7 +37,8 @@ ARG USER_ID=1000
 ARG GROUP_ID=1000
 
 RUN addgroup -g ${GROUP_ID} user \
-   && adduser -h /home/user -s /bin/bash -G user -D -u ${USER_ID} user 
+   && adduser -h /home/user -s /bin/bash -G user -D -u ${USER_ID} user \
+   && addgroup user docker
 
 WORKDIR /home/user
 
