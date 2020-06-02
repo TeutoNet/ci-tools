@@ -31,7 +31,8 @@ RUN apk update && \
   git \
   jq \
   gnupg \
-  multipath-tools
+  multipath-tools \
+  shadow-uidmap
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
