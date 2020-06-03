@@ -5,8 +5,7 @@
 export LC_ALL=C
 
 if [[ -z "$GPG_PRIV_KEY" && -z "$CI_API_TOKEN" ]]; then
-  echo "No CI_API_TOKEN found in ENV"
-  exit 1
+  echo "!! No CI_API_TOKEN found in ENV. Maybe encrypt things unrecoverable !!"
 fi
 
 # Disable strict error-handling and pipefail after key-import
