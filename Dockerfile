@@ -55,7 +55,8 @@ RUN mkdir -p ${XDG_CONFIG_HOME} \
 # "Copying executable plugin to the kustomize plugin path..."
 COPY --from=builder /kustomize-sops/ksops.so ${XDG_CONFIG_HOME}
 # make ksops.so belong to user:user
-RUN chown -R user:user /home/user/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops.so
+RUN chown -R user:user /home/user/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops.so \
+  && chmod 700 /home/user/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops.so
 
 # schema dateien für kubecval cachen
 # siehe https://itnext.io/increasing-kubeval-linting-speeds-9607d1141c6a
