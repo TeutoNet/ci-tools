@@ -48,8 +48,8 @@ COPY --from=builder /go/bin/kustomize /go/bin/sops /usr/local/bin/
 ARG XDG_CONFIG_HOME="/home/user/.config/kustomize/plugin/viaduct.ai/v1/ksops/"
 
 
-RUN chown -R user:user /home/user \
-  && mkdir -p ${XDG_CONFIG_HOME} \
+RUN mkdir -p ${XDG_CONFIG_HOME} \
+  && chown -R user:user /home/user \
   &&  sed -e 's;/bin/ash$;/bin/bash;g' -i /etc/passwd # shell für den benutzer root auf bash umstellenm
 
 # "Copying executable plugin to the kustomize plugin path..."
