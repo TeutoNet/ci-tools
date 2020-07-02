@@ -30,6 +30,8 @@ RUN apk update && \
   gettext \
   git \
   jq \
+  python3 \
+  py3-yaml \
   gnupg \
   multipath-tools \
   shadow-uidmap
@@ -105,6 +107,7 @@ RUN cd /usr/local/bin \
 COPY \
    prepare_gpg_env.sh \
    prepare_ssh_env.sh \
+   edit-secret \
    /usr/local/bin/
    
 USER user
